@@ -6,7 +6,6 @@
 package com.example.atobe.ui.home
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Star
@@ -40,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.atobe.R
+import kotlin.math.ceil
 
 @Composable
 fun HomeView(
@@ -128,16 +127,16 @@ fun HomeView(
                 ) {
                     Button(
                         onClick = { viewModel.previousPage() },
-                        enabled = paginationState.page > 1
+                        enabled = paginationState.page > 0
                     ) {
                         Text("Previous")
                     }
 
-                    Text("Page ${paginationState.page + 1} of ${state.total % paginationState.limit}")
+                    Text("Page ${paginationState.page + 1} of ${ceil(state.total / paginationState.limit.toDouble()).toInt()}")
 
                     Button(
                         onClick = { viewModel.nextPage() },
-                        enabled = paginationState.page < state.total
+                        enabled = (paginationState.page + 1) * paginationState.limit < state.total
                     ) {
                         Text("Next")
                     }
@@ -148,9 +147,8 @@ fun HomeView(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState()) // Allow horizontal scrolling if many options
-                        .padding(horizontal = 16.dp), // Add horizontal padding
-                    horizontalArrangement = Arrangement.spacedBy(8.dp), // Add spacing between buttons
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("Items per page:", style = MaterialTheme.typography.bodyMedium)

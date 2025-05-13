@@ -17,4 +17,7 @@ interface LocalDataSource {
     fun getProductById(id: Int): Flow<Product?>
     suspend fun setProducts(products: ProductCollection)
     suspend fun setProduct(product: Product)
+    fun getTotal(): Flow<Int>
+    suspend fun setTotal(total: Int)
+
 }

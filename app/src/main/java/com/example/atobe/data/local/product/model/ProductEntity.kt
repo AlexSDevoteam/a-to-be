@@ -27,3 +27,10 @@ fun ProductEntity.toDomain(): Product {
         stock = stock
     )
 }
+
+@Entity(tableName = "Total")
+data class TotalEntity(
+    @PrimaryKey
+    val id: Int = 1,
+    val total: Int
+)

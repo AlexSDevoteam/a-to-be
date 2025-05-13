@@ -9,6 +9,7 @@ import com.example.atobe.data.domain.model.Product
 import com.example.atobe.data.domain.model.ProductCollection
 import com.example.atobe.data.domain.model.toDatabaseEntity
 import com.example.atobe.data.local.product.ProductDao
+import com.example.atobe.data.local.product.model.TotalEntity
 import com.example.atobe.data.local.product.model.toDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -36,5 +37,11 @@ class LocalDataSourceImpl @Inject constructor(
 
     override suspend fun setProduct(product: Product) {
         productDao.insertProduct(product.toDatabaseEntity())
+    }
+
+    override fun getTotal(): Flow<Int> = productDao.getTotal().map { it.total }
+
+    override suspend fun setTotal(total: Int) {
+        productDao.insertTotal(TotalEntity(total = total))
     }
 }

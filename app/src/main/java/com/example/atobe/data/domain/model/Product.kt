@@ -25,7 +25,7 @@ data class Product(
 fun Product.toDatabaseEntity(): ProductEntity {
     return ProductEntity(
         id = id,
-        thumbnail = this@toDatabaseEntity.thumbnail,
+        thumbnail = thumbnail,
         title = title,
         rating = rating,
         price = price,

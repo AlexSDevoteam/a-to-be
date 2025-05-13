@@ -25,20 +25,20 @@ class ProductRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource,
 ) : ProductRepository {
     private val mutex = Mutex()
-    private var total = 0
 
     override fun getProducts(
         limit: Int,
         page: Int
     ): Flow<ProductCollection> {
-        val products = localDataSource.getProducts(limit = limit, skip = page).onStart {
+        val skip = page * limit
+        val products = localDataSource.getProducts(limit = limit, skip = skip).onStart {
             fetchProductsIfNeeded(
                 limit = limit,
-                skip = page * limit
+                skip = skip
             )
         }
         return products.map {
-            ProductCollection(products = it, total = total)
+            ProductCollection(products = it, total = localDataSource.getTotal().first())
         }
     }
 
@@ -57,8 +57,8 @@ class ProductRepositoryImpl @Inject constructor(
                 limit = limit
             ).getOrThrow()
 
+            localDataSource.setTotal(remoteProductResult.total)
             localDataSource.setProducts(remoteProductResult)
-            total = remoteProductResult.total
         }
     }
 
