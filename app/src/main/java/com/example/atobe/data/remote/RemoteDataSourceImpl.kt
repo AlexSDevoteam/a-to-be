@@ -15,7 +15,7 @@ class RemoteDataSourceImpl @Inject constructor(private val productApi: ProductAp
         limit: Int,
         skip: Int
     ) = runCatching {
-        productApi.getProducts(limit = limit, skip = skip).products.map { it.toDomain() }
+        productApi.getProducts(limit = limit, skip = skip).toDomain()
     }
 
     override suspend fun getProductDetails(id: Int) = runCatching {

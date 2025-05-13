@@ -6,7 +6,9 @@
 package com.example.atobe.ui.details
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -57,10 +59,10 @@ fun DetailsView(
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(details) { (label, value) ->
-            if(label == "Thumbnail"){
+            if (label == "Thumbnail") {
                 return@items AsyncImage(
                     model = ImageRequest.Builder(context = LocalContext.current)
                         .data(value)
@@ -76,17 +78,24 @@ fun DetailsView(
                     },
                 )
             }
-            Text(
-                "$label:",
-                modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = value.toString(),
-                fontSize = 16.sp,
-                modifier = Modifier.padding(horizontal = 32.dp)
-            )
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp, vertical = 8.dp),
+            ) {
+                Text(
+                    "$label: ",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.alignByBaseline()
+                )
+                Text(
+                    text = value.toString(),
+                    fontSize = 20.sp,
+                )
+            }
         }
     }
 }

@@ -6,13 +6,14 @@
 package com.example.atobe.data
 
 import com.example.atobe.data.domain.model.Product
+import com.example.atobe.data.domain.model.ProductCollection
 import kotlinx.coroutines.flow.Flow
 
 interface ProductRepository {
     fun getProducts(
         limit: Int,
-        skip: Int
-    ): Flow<List<Product>>
+        page: Int,
+    ): Flow<ProductCollection>
 
     fun getProductDetails(id: Int): Flow<Product?>
 }

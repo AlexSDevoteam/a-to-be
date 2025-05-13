@@ -38,12 +38,15 @@ class HomeViewModel @Inject constructor(
     private val retryTrigger = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val uiState = retryTrigger.onStart { emit(Unit) }.flatMapLatest {
         paginationState.map { state ->
-            HomeViewPagination(limit = state.limit, skip = state.skip)
+            HomeViewPagination(limit = state.limit, page = state.page)
         }.distinctUntilChanged()
             .flatMapLatest { state ->
-                repository.getProducts(limit = state.limit, skip = state.skip)
+                repository.getProducts(
+                    limit = state.limit,
+                    page = state.page,
+                )
             }.map {
-                HomeViewState.Success(it)
+                HomeViewState.Success(it.products, it.total)
             }.onStart<HomeViewState> { emit(HomeViewState.Loading) }
             .catch { error ->
                 emit(
@@ -62,7 +65,19 @@ class HomeViewModel @Inject constructor(
 
     fun selectPage(selectedPage: Int) = debounce(200) {
         _paginationState.update {
-            it.copy(skip = selectedPage + it.limit)
+            it.copy(page = selectedPage)
+        }
+    }
+
+    fun nextPage() = debounce(200) {
+        _paginationState.update {
+            it.copy(page = it.page + 1)
+        }
+    }
+
+    fun previousPage() = debounce(200) {
+        _paginationState.update {
+            it.copy(page = it.page - 1)
         }
     }
 

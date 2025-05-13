@@ -7,6 +7,11 @@ package com.example.atobe.data.domain.model
 
 import com.example.atobe.data.local.product.model.ProductEntity
 
+data class ProductCollection(
+    val products: List<Product>,
+    val total: Int
+)
+
 data class Product(
     val id: Int,
     val thumbnail: String,
@@ -27,4 +32,8 @@ fun Product.toDatabaseEntity(): ProductEntity {
         discount = discount,
         stock = stock
     )
+}
+
+fun ProductCollection.toDatabaseEntity(): List<ProductEntity> {
+    return products.map { it.toDatabaseEntity() }
 }

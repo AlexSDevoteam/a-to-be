@@ -6,6 +6,7 @@
 package com.example.atobe.data.local
 
 import com.example.atobe.data.domain.model.Product
+import com.example.atobe.data.domain.model.ProductCollection
 import kotlinx.coroutines.flow.Flow
 
 interface LocalDataSource {
@@ -13,8 +14,7 @@ interface LocalDataSource {
         limit: Int,
         skip: Int
     ): Flow<List<Product>>
-
     fun getProductById(id: Int): Flow<Product?>
-    suspend fun setProducts(products: List<Product>)
+    suspend fun setProducts(products: ProductCollection)
     suspend fun setProduct(product: Product)
 }

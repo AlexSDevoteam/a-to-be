@@ -11,7 +11,8 @@ sealed interface HomeViewState {
     data object Loading : HomeViewState
 
     data class Success(
-        val products: List<Product>
+        val products: List<Product>,
+        val total: Int = 0
     ) : HomeViewState
 
     data class Error(val errorMessage: String) : HomeViewState
@@ -19,5 +20,5 @@ sealed interface HomeViewState {
 
 data class HomeViewPagination(
     val limit: Int = 30,
-    val skip: Int = 0
+    val page: Int = 0
 )
