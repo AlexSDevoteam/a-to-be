@@ -63,12 +63,6 @@ class HomeViewModel @Inject constructor(
 
     fun retry() = retryTrigger.tryEmit(Unit)
 
-    fun selectPage(selectedPage: Int) = debounce(200) {
-        _paginationState.update {
-            it.copy(page = selectedPage)
-        }
-    }
-
     fun nextPage() = debounce(200) {
         _paginationState.update {
             it.copy(page = it.page + 1)
@@ -83,7 +77,7 @@ class HomeViewModel @Inject constructor(
 
     fun selectNumberOfProductsShown(selectedNumber: Int) = debounce(300) {
         _paginationState.update {
-            it.copy(limit = selectedNumber)
+            it.copy(limit = selectedNumber, page = 0)
         }
     }
 

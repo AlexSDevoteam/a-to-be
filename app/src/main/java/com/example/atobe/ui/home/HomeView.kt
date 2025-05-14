@@ -18,9 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -31,7 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -107,11 +105,7 @@ fun HomeView(
                                     text = "Rating: ${product.rating}",
                                     fontSize = 16.sp,
                                 )
-                                Icon(
-                                    imageVector = chooseRatingIcon(product.rating),
-                                    contentDescription = "rating",
-                                    modifier = Modifier.padding(start = 4.dp)
-                                )
+                                RatingIcon(rating = product.rating)
                             }
                         }
                         HorizontalDivider(thickness = 2.dp)
@@ -173,11 +167,40 @@ fun HomeView(
     }
 }
 
-fun chooseRatingIcon(rating: Double): ImageVector {
-    return when {
-        rating < 3 -> Icons.Default.Clear
-        rating in 3.0..4.0 -> Icons.Default.ThumbUp
-        else -> Icons.Default.Star
+@Composable
+fun RatingIcon(rating: Double) {
+    when {
+        rating < 3 -> StarIcon(modifier = Modifier.padding(start = 4.dp))
+
+        rating in 3.0..4.0 -> Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(start = 4.dp),
+        ) {
+            StarIcon()
+            StarIcon()
+            StarIcon()
+        }
+
+        else -> Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(start = 4.dp),
+        ) {
+            StarIcon()
+            StarIcon()
+            StarIcon()
+            StarIcon()
+            StarIcon()
+        }
 
     }
+}
+
+@Composable
+private fun StarIcon(modifier: Modifier = Modifier) {
+    Icon(
+        imageVector = Icons.Default.Star,
+        contentDescription = "rating",
+        tint = Color.Yellow,
+        modifier = modifier
+    )
 }

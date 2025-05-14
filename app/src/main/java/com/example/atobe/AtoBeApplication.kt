@@ -37,15 +37,16 @@ fun AtoBeApp() {
             Details.route -> Details.name
             else -> stringResource(R.string.atobeapp)
         }
+        val isHomeRoute = currentDestination?.route == Home.route
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             topBar = {
                 AtoBeTopBar(
-                    canNavigateBack = currentBackStackEntry != null && currentDestination?.route != Home.route,
+                    canNavigateBack = currentBackStackEntry != null && !isHomeRoute,
                     navigateUp = { navController.navigateUp() },
                     currentScreenTitle = currentScreenTitle,
-                    scrollBehavior = scrollBehavior,
+                    scrollBehavior = if (isHomeRoute) scrollBehavior else null,
                 )
             },
             content = {

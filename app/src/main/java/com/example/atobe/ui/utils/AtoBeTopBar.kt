@@ -18,7 +18,7 @@ fun AtoBeTopBar(
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     currentScreenTitle: String,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior?
 ) {
     CenterAlignedTopAppBar(
         title = {
