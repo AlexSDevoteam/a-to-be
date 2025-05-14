@@ -52,7 +52,7 @@ fun DetailsView(
     ).value
     val details = listOf(
         "Name" to product?.title,
-        "ID" to product?.id,
+        "Product" to product?.id,
         "Price" to product?.price,
         "Discount" to product?.discount,
         "Rating" to product?.rating,

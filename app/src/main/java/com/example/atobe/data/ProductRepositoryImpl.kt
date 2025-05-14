@@ -57,6 +57,9 @@ class ProductRepositoryImpl @Inject constructor(
             localDataSource.setTotal(remoteProductResult.total)
             val allRemoteResults =
                 remoteDataSource.getProducts(limit = remoteProductResult.total).getOrThrow()
+            if (allRemoteResults.products.size != remoteProductResult.total) {
+                return@withLock
+            }
             localDataSource.setProducts(allRemoteResults)
         }
     }
