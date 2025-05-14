@@ -5,6 +5,9 @@
 
 package com.example.atobe.ui.details
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -63,6 +66,9 @@ fun DetailsView(
     ) {
         items(details) { (label, value) ->
             if (label == "Thumbnail") {
+                if (!LocalContext.current.isNetworkAvailable()) {
+                    return@items
+                }
                 return@items AsyncImage(
                     model = ImageRequest.Builder(context = LocalContext.current)
                         .data(value)
@@ -98,4 +104,12 @@ fun DetailsView(
             }
         }
     }
+}
+
+fun Context.isNetworkAvailable(): Boolean {
+    val connectivityManager =
+        this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = connectivityManager.activeNetwork ?: return false
+    val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+    return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }

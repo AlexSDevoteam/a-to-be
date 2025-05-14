@@ -11,7 +11,6 @@ import com.example.atobe.data.local.LocalDataSource
 import com.example.atobe.data.remote.RemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.sync.Mutex
@@ -48,35 +47,21 @@ class ProductRepositoryImpl @Inject constructor(
                 limit, skip
             ).first()
 
-            if (localProducts.isNotEmpty() && localProducts.size >= limit) {
+            if (localProducts.isNotEmpty()) {
                 return@withLock
             }
 
-            val remoteProductResult = remoteDataSource.getProducts(
-                skip = skip,
-                limit = limit
-            ).getOrThrow()
+            val remoteProductResult =
+                remoteDataSource.getProducts(limit = 1).getOrThrow()
 
             localDataSource.setTotal(remoteProductResult.total)
-            localDataSource.setProducts(remoteProductResult)
+            val allRemoteResults =
+                remoteDataSource.getProducts(limit = remoteProductResult.total).getOrThrow()
+            localDataSource.setProducts(allRemoteResults)
         }
     }
 
     override fun getProductDetails(id: Int): Flow<Product?> {
-        return localDataSource.getProductById(id).onStart {
-            fetchProductDetailsIfNeeded(id)
-        }
+        return localDataSource.getProductById(id)
     }
-
-    private suspend fun fetchProductDetailsIfNeeded(id: Int) {
-        return mutex.withLock {
-            val localProduct = localDataSource.getProductById(id).firstOrNull()
-            if (localProduct != null) {
-                return@withLock
-            }
-            val remoteProduct = remoteDataSource.getProductDetails(id).getOrThrow()
-            localDataSource.setProduct(remoteProduct)
-        }
-    }
-
 }
